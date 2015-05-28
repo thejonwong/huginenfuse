@@ -229,7 +229,7 @@ function prepareEnfuseSimpleCommands(HuginEnfuseOptions, EnfusePath, prefixName,
 	-- first flatten photoPaths and escape with quotes for windows
 	local photoPathsFlattened = ""
 	for _, photoPath in ipairs(photoPaths) do
-		photoPathsFlattened = photoPathsFlattened .. " " .. string.format("%s",photoPath)
+		photoPathsFlattened = photoPathsFlattened .. " " .. string.format("\"%s\"",photoPath)
 	end
 
 	local temporaryOutputFolder = string.format("\"%stemp%s*.tif\"", taskProperties.projectFolder, HuginEnfuseOptions.dirSeparator)

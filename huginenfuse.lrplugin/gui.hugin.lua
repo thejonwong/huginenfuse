@@ -175,12 +175,12 @@ function prepareHuginSimpleBatchCommands(HuginEnfuseOptions, huginPath, prefixNa
 	-- first flatten photoPaths and escape with quotes for windows
 	local photoPathsFlattened = ""
 	for _, photoPath in ipairs(photoPaths) do
-		photoPathsFlattened = photoPathsFlattened .. " " .. string.format("%s",photoPath)
+		photoPathsFlattened = photoPathsFlattened .. " " .. string.format("\"%s\"",photoPath)
 	end
 
 	local optimizedProjectName = string.format("\"%s%s-optimized.pto\"", taskProperties.projectFolder, prefixName)
 	local projectName = string.format("\"%s%s.pto\"", taskProperties.projectFolder, prefixName)
-	local temporaryOutput = string.format("\"%stemp%s%s\"", taskProperties.projectFolder, HuginEnfuseOptions.dirSeparator, prefixName)
+	local temporaryOutput = string.format("%stemp%s%s", taskProperties.projectFolder, HuginEnfuseOptions.dirSeparator, prefixName)
 
 	return {
 		execString(HuginEnfuseOptions, huginPath, "pto_gen", string.format("-o %s %s", projectName, photoPathsFlattened)),
@@ -189,7 +189,7 @@ function prepareHuginSimpleBatchCommands(HuginEnfuseOptions, huginPath, prefixNa
 		execString(HuginEnfuseOptions, huginPath, "ptoclean", string.format("-v --output %s %s", projectName, projectName)),
 		execString(HuginEnfuseOptions, huginPath, "autooptimiser", string.format("-a -s -l -m -o %s %s", optimizedProjectName, projectName)),
 		execString(HuginEnfuseOptions, huginPath, "pano_modify", string.format("-o %s --center --canvas=AUTO %s", optimizedProjectName, optimizedProjectName)),
-		execString(HuginEnfuseOptions, huginPath, "nona", string.format("-m TIFF_m -o %s %s", temporaryOutput  ,optimizedProjectName)),
-		execString(HuginEnfuseOptions, huginPath, "enblend", string.format("-o %s.TIF %s*.tif", taskProperties.projectFolder .. prefixName, temporaryOutput)),
+		execString(HuginEnfuseOptions, huginPath, "nona", string.format("-m TIFF_m -o \"%s\" %s", temporaryOutput  ,optimizedProjectName)),
+		execString(HuginEnfuseOptions, huginPath, "enblend", string.format("-o \"%s.TIF\" \"%s*.tif\"", taskProperties.projectFolder .. prefixName, temporaryOutput)),
 	}
 end
